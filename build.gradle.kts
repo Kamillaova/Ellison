@@ -14,12 +14,19 @@ repositories {
 }
 
 dependencies {
+    /*   Discord Bot API Library   */
     implementation("com.jessecorbett:diskord-bot:2.1.1")
+
+    /*   Coroutines   */
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    /*   Dependency Injection   */
     implementation("io.insert-koin:koin-core:3.1.4")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+
+    /*   Network API Requests   */
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 }
 
 
