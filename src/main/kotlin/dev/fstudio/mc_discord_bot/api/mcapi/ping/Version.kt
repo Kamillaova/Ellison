@@ -1,11 +1,11 @@
-package dev.fstudio.mc_discord_bot.api.mcapi.model
+package dev.fstudio.mc_discord_bot.api.mcapi.ping
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Server(
+data class Version(
     @SerialName("name")
     val name: String,
     @SerialName("protocol")

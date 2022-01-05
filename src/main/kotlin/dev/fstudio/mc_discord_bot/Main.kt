@@ -1,27 +1,32 @@
 package dev.fstudio.mc_discord_bot
 
 import dev.fstudio.mc_discord_bot.di.networkModule
+import dev.fstudio.mc_discord_bot.utils.CommandArguments
+import dev.fstudio.mc_discord_bot.utils.CommandArguments.botToken
+import dev.fstudio.mc_discord_bot.utils.CommandArguments.channelId
+import dev.fstudio.mc_discord_bot.utils.CommandArguments.discordStatus
+import dev.fstudio.mc_discord_bot.utils.CommandArguments.serverIp
+import dev.fstudio.mc_discord_bot.utils.CommandArguments.serverPort
+import dev.fstudio.mc_discord_bot.utils.CommandArguments.statusUpdateTime
 import dev.fstudio.mc_discord_bot.utils.DiskordBotManager
 import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.core.context.startKoin
 
 @DelicateCoroutinesApi
-suspend fun main() {
+suspend fun main(args: Array<String>) {
 
     startKoin {
         modules(networkModule)
     }
 
-    val serv1 = DiskordBotManager()
-    serv1.setupBot(
-        "923947788826468413",
-        "play.rivasubs.ru",
-//        status = true
-    )
+    CommandArguments.parseArgs(args)
 
-    val serv2 = DiskordBotManager()
-    serv2.setupBot(
-        "923998864757887047",
-        "play.hypixel.net",
+    DiskordBotManager.setupBot(
+        botToken,
+        channelId,
+        serverIp,
+        serverPort,
+        discordStatus,
+        statusUpdateTime
     )
 }

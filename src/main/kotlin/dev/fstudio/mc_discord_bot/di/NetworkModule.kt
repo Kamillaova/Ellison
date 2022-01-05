@@ -11,7 +11,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-private const val URL = "http://mcapi.us"
+private const val URL = "https://eu.mc-api.net/v3/"
 
 val networkModule = module {
     single { provideOkHttp() }
@@ -21,9 +21,9 @@ val networkModule = module {
 
 private fun provideOkHttp(): OkHttpClient {
     return OkHttpClient.Builder()
-        .callTimeout(20, TimeUnit.SECONDS)
-        .writeTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(20, TimeUnit.SECONDS)
+        .callTimeout(5, TimeUnit.SECONDS)
+        .writeTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
         .followRedirects(true)
         .followSslRedirects(true)
         .build()

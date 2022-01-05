@@ -1,13 +1,13 @@
 package dev.fstudio.mc_discord_bot.api.mcapi
 
-import dev.fstudio.mc_discord_bot.api.mcapi.model.ServerStatus
+import dev.fstudio.mc_discord_bot.api.mcapi.ping.ServerPing
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface MCApi {
-    @GET("/server/status")
-    suspend fun getServerStatus(
-        @Query("ip") ip: String,
-        @Query("port") port: String
-    ): ServerStatus
+    @GET("server/ping/{ip}:{port}")
+    suspend fun getServerPing(
+        @Path("ip") ip: String,
+        @Path("port") port: String
+    ): ServerPing
 }

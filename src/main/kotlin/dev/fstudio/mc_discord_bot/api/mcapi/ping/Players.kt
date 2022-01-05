@@ -1,4 +1,4 @@
-package dev.fstudio.mc_discord_bot.api.mcapi.model
+package dev.fstudio.mc_discord_bot.api.mcapi.ping
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 data class Players(
     @SerialName("max")
     val max: Int,
-    @SerialName("now")
-    val now: Int,
+    @SerialName("online")
+    val online: Int,
     @SerialName("sample")
-    val sample: List<Sample>
+    val sample: List<Sample>? = null
 )

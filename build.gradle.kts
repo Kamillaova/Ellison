@@ -14,6 +14,10 @@ repositories {
 }
 
 dependencies {
+
+    /*   CLI Args   */
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+
     /*   Discord Bot API Library   */
     implementation("com.jessecorbett:diskord-bot:2.1.1")
 
@@ -30,7 +34,7 @@ dependencies {
 }
 
 
-tasks.withType<KotlinCompile>() {
+tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
 
