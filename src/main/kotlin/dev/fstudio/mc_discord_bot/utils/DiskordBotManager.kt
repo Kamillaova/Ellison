@@ -30,15 +30,15 @@ object DiskordBotManager {
                 }
 
                 listOf("top", "топ", "t", "т").forEach { alias ->
-                    //TODO Request from server user data for calculate time in game
+                    command(alias, block = discordBotCommands.requestTop())
                 }
 
                 listOf("stats", "стата", "s", "с").forEach { alias ->
-                    //TODO Request stats from world
+                    command(alias, block = discordBotCommands.requestStats())
                 }
 
                 listOf("list", "лист", "l", "л").forEach { alias ->
-                    //TODO Request list about all players on server logged any time
+                    command(alias, block = discordBotCommands.requestPlayerList())
                 }
             }
         }

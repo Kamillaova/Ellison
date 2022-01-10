@@ -4,58 +4,104 @@ import com.jessecorbett.diskord.api.channel.Embed
 import com.jessecorbett.diskord.api.channel.EmbedField
 import com.jessecorbett.diskord.api.channel.EmbedFooter
 import com.jessecorbett.diskord.api.channel.EmbedImage
-import com.jessecorbett.diskord.util.Colors
 import dev.fstudio.mc_discord_bot.api.mcapi.ping.ServerPing
+import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
+import dev.fstudio.mc_discord_bot.api.mcworldstats.Player
+import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.getAllBlocks
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.getGroundWalkedDistance
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.getRandomColor
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.getSwamDistance
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.tickToTime
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.withSuffix
 import mu.KLogger
-import kotlin.random.Random
 
 object MessageTemplate {
 
-    private val random = Random(System.currentTimeMillis())
-    lateinit var motd: String
+    val footerText = "Бот создан при поддержки дискорд сообшества Rivaviva | Автор Syorito Hatsuki"
 
-    fun onlinePlayers(data: ServerPing, logger: KLogger): Embed.() -> Unit {
+    suspend fun onlinePlayers(data: ServerPing, mcStats: MCWorldApi, logger: KLogger): Embed.() -> Unit {
 
         val playersList = mutableListOf<EmbedField>()
 
-        data.description.extra?.forEach {
-            motd += it.text
-        }
-
-        if (data.description.extra.isNullOrEmpty()) {
-            motd = data.description.text.toString()
-        }
-
-        logger.info("Online request: Success")
-
-        logger.info("Online request: Currently online")
-
         data.players.sample?.forEach { player ->
-            playersList.add(EmbedField(player.name, player.id, true))
-            logger.info("Online request: ${player.name}")
+            kotlin.runCatching {
+                mcStats.getStats(player.name)
+            }.onSuccess {
+                playersList.add(EmbedField(player.name, "${it.minecraftPlayOneMinute.tickToTime()}", true))
+            }.onFailure {
+                logger.error(it.stackTraceToString())
+            }
         }
-
-        logger.info("Online request: Total players count: ${data.players.online}")
-
-        logger.info("Online request: Message responded")
 
         return {
             title = "Онлайн сервера"
-            description =
-                "Количество модов на сервере ${data.forgeData?.mods?.size}\n" +
-                        "Тип сервера: ${data.version.name}\n" +
-                        "\n" +
-                        "MOTD: $motd"
+            description = "Модов на сервере ${data.forgeData?.mods?.size}\n" +
+                    "Версия сервера: ${data.version.name}\n\n"
             fields = playersList
-            color = Colors.rgb(
-                random.nextInt(0, 255),
-                random.nextInt(0, 255),
-                random.nextInt(0, 255)
-            )
-            footer = EmbedFooter(
-                "Players: ${data.players.online} / ${data.players.max}\nTime code: ${data.fetch}"
-            )
+            color = getRandomColor()
+            footer = EmbedFooter("Всего игроков: ${data.players.online} / ${data.players.max}\n" + footerText)
             thumbnail = EmbedImage(data.favicon)
         }
+    }
+
+    fun playerStats(username: String, data: Stats): Embed.() -> Unit {
+        return {
+            title = "Статистика персонажа - $username"
+            description = statsDescription(data)
+            color = getRandomColor()
+            footer = EmbedFooter(footerText)
+        }
+    }
+
+    fun allPlayers(data: List<Player>): Embed.() -> Unit {
+        var list = ""
+
+        data.forEachIndexed { index, player ->
+            list += "**${index + 1}. ** ${player.name.replace("_", "＿")}\n"
+        }
+
+        return {
+            title = "Список игроков сервера"
+            description = list
+            color = getRandomColor()
+            footer = EmbedFooter(footerText)
+        }
+    }
+
+    fun topPlayers(data: List<Player>): Embed.() -> Unit {
+
+        val topTen = mutableListOf<EmbedField>()
+
+        for (i in 0..9) {
+            topTen.add(
+                EmbedField(
+                    "${i + 1}. ${data[i].name}",
+                    data[i].minecraftPlayOneMinute?.tickToTime().toString(),
+                    false
+                )
+            )
+        }
+
+        return {
+            title = "Топ 10 игроков сервера"
+            fields = topTen
+            color = getRandomColor()
+            footer = EmbedFooter(footerText)
+        }
+    }
+
+    private fun statsDescription(data: Stats): String {
+        return "**Количество действий**\n\n" +
+                "**Время в игре: ${data.minecraftPlayOneMinute.tickToTime()}\n" +
+                "**Убийств / Смертей: **${data.minecraftPlayerKills.withSuffix()} / ${data.minecraftDeaths.withSuffix()}\n" +
+                "**Зачарованых предметов: **${data.minecraftEnchantItem.withSuffix()}\n" +
+                "**Выкинутого дропа: **${data.minecraftDrop.withSuffix()}\n" +
+                "**Убитых мобов: **${data.minecraftMobKills.withSuffix()}\n" +
+                "**Прыжков: **${data.minecraftJump.withSuffix()}\n\n" +
+                "**Всего пройдено по земле: **${getGroundWalkedDistance(data).withSuffix()}\n" +
+                "**Общее проплытое растояние: **${getSwamDistance(data).withSuffix()}\n" +
+                "**Общее расстояние полета: **${data.minecraftFlyOneCm.withSuffix()}\n\n" +
+                "**Всего преодалено: **${getAllBlocks(data).withSuffix()}"
     }
 }
