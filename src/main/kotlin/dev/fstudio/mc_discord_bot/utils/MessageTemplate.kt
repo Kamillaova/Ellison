@@ -18,7 +18,7 @@ import mu.KLogger
 
 object MessageTemplate {
 
-    val footerText = "Бот создан при поддержки дискорд сообшества Rivaviva | Автор Syorito Hatsuki"
+    private const val footerText = "Бот создан при поддержки дискорд сообшества Rivaviva | Автор Syorito Hatsuki"
 
     suspend fun onlinePlayers(data: ServerPing, mcStats: MCWorldApi, logger: KLogger): Embed.() -> Unit {
 
