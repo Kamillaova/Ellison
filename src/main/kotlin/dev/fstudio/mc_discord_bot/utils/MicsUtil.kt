@@ -29,6 +29,7 @@ object MicsUtil {
 
     fun getAllBlocks(data: Stats): Int = getGroundWalkedDistance(data) +
             getSwamDistance(data) +
+            data.minecraftFlyOneCm +
             data.minecraftFlyOneCm
 
     fun Int.tickToTime(): Time {
@@ -52,6 +53,10 @@ object MicsUtil {
             this / 1000.0.pow(exp.toDouble()),
             "kMGTPE"[exp - 1]
         )
+    }
+
+    fun String.fixUnderline(): String {
+        return this.replace("_", "\\_")
     }
 
 }

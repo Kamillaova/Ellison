@@ -8,6 +8,7 @@ import dev.fstudio.mc_discord_bot.api.mcapi.ping.ServerPing
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Player
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.fixUnderline
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getAllBlocks
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getGroundWalkedDistance
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getRandomColor
@@ -28,7 +29,13 @@ object MessageTemplate {
             kotlin.runCatching {
                 mcStats.getStats(player.name)
             }.onSuccess {
-                playersList.add(EmbedField(player.name, "${it.minecraftPlayOneMinute.tickToTime()}", true))
+                playersList.add(
+                    EmbedField(
+                        player.name.fixUnderline(),
+                        "${it.minecraftPlayOneMinute.tickToTime()}",
+                        true
+                    )
+                )
             }.onFailure {
                 logger.error(it.stackTraceToString())
             }
@@ -58,7 +65,7 @@ object MessageTemplate {
         var list = ""
 
         data.forEachIndexed { index, player ->
-            list += "**${index + 1}. ** ${player.name.replace("_", "＿")}\n"
+            list += "**${index + 1}. ** ${player.name.fixUnderline()}\n"
         }
 
         return {
@@ -76,7 +83,7 @@ object MessageTemplate {
         for (i in 0..9) {
             topTen.add(
                 EmbedField(
-                    "${i + 1}. ${data[i].name}",
+                    "${i + 1}. ${data[i].name.fixUnderline()}",
                     data[i].minecraftPlayOneMinute?.tickToTime().toString(),
                     false
                 )

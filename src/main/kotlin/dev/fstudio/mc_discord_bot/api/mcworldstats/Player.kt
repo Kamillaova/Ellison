@@ -1,6 +1,7 @@
 package dev.fstudio.mc_discord_bot.api.mcworldstats
 
 
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.fixUnderline
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,4 +11,8 @@ data class Player(
     val name: String,
     @SerialName("minecraftPlayOneMinute")
     val minecraftPlayOneMinute: Int? = 0
-)
+) {
+    override fun toString(): String {
+        return super.toString().fixUnderline()
+    }
+}

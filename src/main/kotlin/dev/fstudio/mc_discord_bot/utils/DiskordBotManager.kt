@@ -18,7 +18,14 @@ object DiskordBotManager {
     ) {
         bot(botToken) {
 
-            discordBotCommands = DiscordBotCommands(logger, channelId, serverIp, serverPort, status, statusUpdateTime)
+            discordBotCommands = DiscordBotCommands(
+                logger,
+                channelId,
+                serverIp,
+                serverPort,
+                status,
+                statusUpdateTime
+            )
 
             events {
                 onReady(discordBotCommands.requestStatus(this@bot))
