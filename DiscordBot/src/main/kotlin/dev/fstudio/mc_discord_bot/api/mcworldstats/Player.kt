@@ -10,7 +10,9 @@ data class Player(
     @SerialName("name")
     val name: String,
     @SerialName("minecraftPlayOneMinute")
-    val minecraftPlayOneMinute: Int? = 0
+    val minecraftPlayOneMinute: Int? = 0,
+    @SerialName("abandoned")
+    val abandoned: Boolean? = false
 ) {
     override fun toString(): String {
         return super.toString().fixUnderline()

@@ -3,7 +3,17 @@ package dev.fstudio.mc_discord_bot.utils
 import com.jessecorbett.diskord.api.common.Color
 import com.jessecorbett.diskord.util.Colors
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.model.Config
+import dev.fstudio.mc_discord_bot.model.Connection
+import dev.fstudio.mc_discord_bot.model.Discord
 import dev.fstudio.mc_discord_bot.model.Time
+import net.peanuuutz.tomlkt.Toml
+import java.io.File
+import java.nio.file.Paths
+import kotlin.io.path.Path
+import kotlin.io.path.notExists
+import kotlin.io.path.readText
+import kotlin.io.path.writeText
 import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.random.Random
@@ -55,8 +65,25 @@ object MicsUtil {
         )
     }
 
-    fun String.fixUnderline(): String {
-        return this.replace("_", "\\_")
+    fun String.fixUnderline(): String = this.replace("_", "\\_")
+
+    fun String.convertToDead(isDead: Boolean?): String = if (isDead == true) "~~$this~~" else this
+
+    fun getConfiguration(): Config {
+
+        Toml { ignoreUnknownKeys = true }
+
+        val path = "config"
+        val file = "$path/discord-bot.toml"
+
+        if (Path(path).notExists()) File(path).mkdir()
+
+        if (!File(file).exists()) {
+            val config =
+                Toml.encodeToString(Config.serializer(), Config(connection = Connection(), discord = Discord()))
+            Paths.get(File(file).toURI()).writeText(config)
+        }
+        return Toml.decodeFromString(Config.serializer(), Paths.get(file).readText())
     }
 
 }

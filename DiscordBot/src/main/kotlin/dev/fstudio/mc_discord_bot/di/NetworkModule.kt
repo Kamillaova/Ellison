@@ -3,6 +3,7 @@ package dev.fstudio.mc_discord_bot.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dev.fstudio.mc_discord_bot.api.mcapi.MCApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.getConfiguration
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -11,9 +12,6 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 val json = Json { ignoreUnknownKeys = true }
-
-const val URL = "http://play.rivaviva.ru:1540/"
-//const val URL = "http://localhost:8080/"
 
 val networkModule = module {
     single { provideOkHttp() }
@@ -34,7 +32,7 @@ private fun provideOkHttp(): OkHttpClient {
 private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl(URL)
+        .baseUrl(getConfiguration().webAPI)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 }

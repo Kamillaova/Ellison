@@ -16,9 +16,8 @@ repositories {
 }
 
 dependencies {
-
-    /*   CLI Args   */
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+    /*   TOML Configuration file   */
+    implementation("net.peanuuutz:tomlkt:0.1.0")
 
     /*   Discord Bot API Library   */
     implementation("com.jessecorbett:diskord-bot:2.1.1")
@@ -33,8 +32,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
-
 }
 
 tasks.withType<KotlinCompile> {

@@ -8,6 +8,7 @@ import dev.fstudio.mc_discord_bot.api.mcapi.ping.ServerPing
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Player
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.utils.MicsUtil.convertToDead
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.fixUnderline
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getAllBlocks
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getGroundWalkedDistance
@@ -18,8 +19,6 @@ import dev.fstudio.mc_discord_bot.utils.MicsUtil.withSuffix
 import mu.KLogger
 
 object MessageTemplate {
-
-    private const val footerText = "Бот создан при поддержки дискорд сообшества Rivaviva | Автор Syorito Hatsuki"
 
     suspend fun onlinePlayers(data: ServerPing, mcStats: MCWorldApi, logger: KLogger): Embed.() -> Unit {
 
@@ -32,7 +31,7 @@ object MessageTemplate {
                 playersList.add(
                     EmbedField(
                         player.name.fixUnderline(),
-                        "${it.minecraftPlayOneMinute.tickToTime()}",
+                        "$realDaysInDay ${it.minecraftPlayOneMinute.tickToTime()}",
                         true
                     )
                 )
@@ -42,34 +41,25 @@ object MessageTemplate {
         }
 
         return {
-            title = "Онлайн сервера"
-            description = "Модов на сервере ${data.forgeData?.mods?.size}\n" +
-                    "Версия сервера: ${data.version.name}\n\n"
+            title = onlinePlayersTitle
+            description = "$modsCountOnServer ${data.forgeData?.mods?.size}\n" +
+                    "$serverVersion ${data.version.name}\n\n"
             fields = playersList
             color = getRandomColor()
-            footer = EmbedFooter("Всего игроков: ${data.players.online} / ${data.players.max}\n" + footerText)
+            footer = EmbedFooter("$playersCount ${data.players.online} / ${data.players.max}\n" + footerText)
             thumbnail = EmbedImage(data.favicon)
-        }
-    }
-
-    fun playerStats(username: String, data: Stats): Embed.() -> Unit {
-        return {
-            title = "Статистика персонажа - $username"
-            description = statsDescription(data)
-            color = getRandomColor()
-            footer = EmbedFooter(footerText)
         }
     }
 
     fun allPlayers(data: List<Player>): Embed.() -> Unit {
         var list = ""
 
-        data.forEachIndexed { index, player ->
-            list += "**${index + 1}. ** ${player.name.fixUnderline()}\n"
+        data.sortedBy { it.name }.forEachIndexed { index, player ->
+            list += "**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n"
         }
 
         return {
-            title = "Список игроков сервера"
+            title = allPlayersTitle
             description = list
             color = getRandomColor()
             footer = EmbedFooter(footerText)
@@ -83,32 +73,41 @@ object MessageTemplate {
         for (i in 0..9) {
             topTen.add(
                 EmbedField(
-                    "${i + 1}. ${data[i].name.fixUnderline()}",
-                    data[i].minecraftPlayOneMinute?.tickToTime().toString(),
+                    "${i + 1}. ${data[i].name.fixUnderline().convertToDead(data[i].abandoned)}",
+                    "$realDaysInDay ${data[i].minecraftPlayOneMinute?.tickToTime()}",
                     false
                 )
             )
         }
 
         return {
-            title = "Топ 10 игроков сервера"
+            title = topPlayersTitle
             fields = topTen
             color = getRandomColor()
             footer = EmbedFooter(footerText)
         }
     }
 
+    fun playerStats(username: String, data: Stats): Embed.() -> Unit {
+        return {
+            title = "$playerStatsTitle - $username"
+            description = statsDescription(data)
+            color = getRandomColor()
+            footer = EmbedFooter(footerText)
+        }
+    }
+
     private fun statsDescription(data: Stats): String {
-        return "**Количество действий**\n\n" +
-                "**Время в игре: ${data.minecraftPlayOneMinute.tickToTime()}\n" +
-                "**Убийств / Смертей: **${data.minecraftPlayerKills.withSuffix()} / ${data.minecraftDeaths.withSuffix()}\n" +
-                "**Зачарованых предметов: **${data.minecraftEnchantItem.withSuffix()}\n" +
-                "**Выкинутого дропа: **${data.minecraftDrop.withSuffix()}\n" +
-                "**Убитых мобов: **${data.minecraftMobKills.withSuffix()}\n" +
-                "**Прыжков: **${data.minecraftJump.withSuffix()}\n\n" +
-                "**Всего пройдено по земле: **${getGroundWalkedDistance(data).withSuffix()}\n" +
-                "**Общее проплытое растояние: **${getSwamDistance(data).withSuffix()}\n" +
-                "**Общее расстояние полета: **${data.minecraftFlyOneCm.withSuffix()}\n\n" +
-                "**Всего преодалено: **${getAllBlocks(data).withSuffix()}"
+        return "**$numberOfActions**\n\n" +
+                "**$realDaysInDay **${data.minecraftPlayOneMinute.tickToTime()}\n" +
+                "**$killsAndDeath **${data.minecraftPlayerKills.withSuffix()} / ${data.minecraftDeaths.withSuffix()}\n" +
+                "**$enchantedItems **${data.minecraftEnchantItem.withSuffix()}\n" +
+                "**$droppedItems **${data.minecraftDrop.withSuffix()}\n" +
+                "**$killedMobs **${data.minecraftMobKills.withSuffix()}\n" +
+                "**$jumpCount **${data.minecraftJump.withSuffix()}\n\n" +
+                "**$walkedDistance **${getGroundWalkedDistance(data).withSuffix()}\n" +
+                "**$swamDistance **${getSwamDistance(data).withSuffix()}\n" +
+                "**$flownDistance **${data.minecraftFlyOneCm.withSuffix()}\n\n" +
+                "**$totalDistance **${getAllBlocks(data).withSuffix()}"
     }
 }

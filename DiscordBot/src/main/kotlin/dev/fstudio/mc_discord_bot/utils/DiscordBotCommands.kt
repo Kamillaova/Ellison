@@ -23,9 +23,8 @@ class DiscordBotCommands(
     private val status: Boolean,
     private val statusUpdateTime: Int
 ) {
-    companion object {
-        const val pingUrl = "https://eu.mc-api.net/v3"
-    }
+
+    val pingUrl = "https://eu.mc-api.net/v3"
 
     private val mcApi by inject<MCApi>(MCApi::class.java)
     private val mcStats by inject<MCWorldApi>(MCWorldApi::class.java)
@@ -59,7 +58,7 @@ class DiscordBotCommands(
                 }.onSuccess { data ->
                     it.respond(block = MessageTemplate.onlinePlayers(data, mcStats, logger))
                 }.onFailure { error ->
-                    it.respond("Сервер временно не доступен")
+                    it.respond(onlineRequestError)
                     logger.error("Online request: ${error.stackTraceToString()}")
                 }
             }
@@ -76,10 +75,10 @@ class DiscordBotCommands(
                     }.onSuccess { data ->
                         it.respond(block = MessageTemplate.playerStats(username, data))
                     }.onFailure { error ->
-                        it.respond("Сервер временно не доступен")
+                        it.respond(onlineRequestError)
                         logger.error("Stats request: ${error.stackTraceToString()}")
                     }
-                } else it.respond("Используйте данную команду в следуйшем виде -> !s {nickname}")
+                } else it.respond(statsRequestError)
             }
         }
     }
@@ -92,7 +91,7 @@ class DiscordBotCommands(
                 }.onSuccess { data ->
                     it.respond(block = MessageTemplate.allPlayers(data))
                 }.onFailure { error ->
-                    it.respond("Сервер временно не доступен")
+                    it.respond(onlineRequestError)
                     logger.error("Online status: ${error.stackTraceToString()}")
                 }
             }
@@ -107,7 +106,7 @@ class DiscordBotCommands(
                 }.onSuccess { data ->
                     it.respond(block = MessageTemplate.topPlayers(data))
                 }.onFailure { error ->
-                    it.respond("Сервер временно не доступен")
+                    it.respond(onlineRequestError)
                     logger.error("Online status: ${error.stackTraceToString()}")
                 }
             }
