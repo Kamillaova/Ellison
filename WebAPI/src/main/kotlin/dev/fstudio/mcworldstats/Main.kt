@@ -1,27 +1,29 @@
 package dev.fstudio.mcworldstats
 
-import dev.fstudio.mcworldstats.util.CommandArguments
-import dev.fstudio.mcworldstats.util.CommandArguments.host
-import dev.fstudio.mcworldstats.util.CommandArguments.port
+import dev.fstudio.mcworldstats.util.MicsUtil.getConfiguration
 import dev.fstudio.mcworldstats.web.plugins.configureDatabase
-import dev.fstudio.mcworldstats.web.plugins.configureKoin
 import dev.fstudio.mcworldstats.web.plugins.configureRouting
 import dev.fstudio.mcworldstats.web.plugins.configureSerialization
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.HttpHeaders.AccessControlAllowOrigin
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.serialization.json.Json
 
 val json = Json { ignoreUnknownKeys = true }
+val config = getConfiguration()
 
-fun main(args: Array<String>) {
+fun main() {
 
-    CommandArguments.parseArgs(args)
-
-    embeddedServer(Netty, host = host, port = port) {
+    embeddedServer(Netty, host = config.server.host, port = config.server.port) {
         configureSerialization()
         configureDatabase()
         configureRouting()
-        configureKoin()
+        install(CORS) {
+            anyHost()
+            header(AccessControlAllowOrigin)
+        }
     }.start(wait = true)
 
 }

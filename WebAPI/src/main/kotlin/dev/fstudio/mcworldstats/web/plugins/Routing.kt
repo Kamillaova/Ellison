@@ -1,6 +1,6 @@
 package dev.fstudio.mcworldstats.web.plugins
 
-import dev.fstudio.mcworldstats.util.CommandArguments.path
+import dev.fstudio.mcworldstats.config
 import dev.fstudio.mcworldstats.web.routers.routeAllPlayers
 import dev.fstudio.mcworldstats.web.routers.routeStat
 import dev.fstudio.mcworldstats.web.routers.routeTop
@@ -15,7 +15,7 @@ fun Application.configureRouting() {
         routeAllPlayers()
         routeTop()
         static("stats") {
-            staticRootFolder = File(path)
+            staticRootFolder = File(config.worldPath)
             files("stats")
         }
     }

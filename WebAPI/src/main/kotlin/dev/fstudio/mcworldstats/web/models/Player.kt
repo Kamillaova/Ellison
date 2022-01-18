@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class Player(
     val name: String,
     val uuid: String? = "",
-    val minecraftPlayOneMinute: Int? = -1
+    val minecraftPlayOneMinute: Int? = -1,
+    val abandoned: Boolean? = null
 )

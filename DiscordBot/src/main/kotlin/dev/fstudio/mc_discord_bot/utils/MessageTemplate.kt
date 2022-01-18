@@ -54,7 +54,7 @@ object MessageTemplate {
     fun allPlayers(data: List<Player>): Embed.() -> Unit {
         var list = ""
 
-        data.sortedBy { it.name }.forEachIndexed { index, player ->
+        data.forEachIndexed { index, player ->
             list += "**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n"
         }
 

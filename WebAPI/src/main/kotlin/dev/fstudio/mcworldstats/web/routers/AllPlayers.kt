@@ -12,9 +12,9 @@ fun Route.routeAllPlayers() {
     get("allplayers") {
         val players = transaction {
             UserTable.selectAll().map {
-                Player(it[UserTable.name])
+                Player(it[UserTable.name], abandoned = it[UserTable.abandoned])
             }
-        }
+        }.sortedBy { it.name }
 
         call.respond(players)
     }

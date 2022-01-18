@@ -30,9 +30,8 @@ tasks.withType<ShadowJar> {
 }
 
 dependencies {
-
-    /*   CLI Args   */
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+    /*   TOML Configuration file   */
+    implementation("net.peanuuutz:tomlkt:0.1.0")
 
     /*   Ktor API   */
     implementation("io.ktor:ktor-server-core:1.6.7")
@@ -49,12 +48,4 @@ dependencies {
 
     /*   MySQL Connector   */
     implementation("mysql:mysql-connector-java:8.0.25")
-
-    /*   Dependency Injection   */
-    implementation("io.insert-koin:koin-core:3.1.4")
-
-    /*   Network API Requests   */
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 }
