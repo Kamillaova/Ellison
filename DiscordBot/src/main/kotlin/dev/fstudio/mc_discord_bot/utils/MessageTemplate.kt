@@ -55,9 +55,9 @@ object MessageTemplate {
 
         return {
             title = allPlayersTitle
-            description =  StringBuilder().also {
+            description =  StringBuilder().apply {
                 data.forEachIndexed { index, player ->
-                    it.append("**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n")
+                    append("**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n")
                 }
             }.toString()
             color = getRandomColor()
