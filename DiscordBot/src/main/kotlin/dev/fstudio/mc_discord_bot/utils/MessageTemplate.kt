@@ -52,15 +52,14 @@ object MessageTemplate {
     }
 
     fun allPlayers(data: List<Player>): Embed.() -> Unit {
-        var list = ""
-
-        data.forEachIndexed { index, player ->
-            list += "**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n"
-        }
 
         return {
             title = allPlayersTitle
-            description = list
+            description =  StringBuilder().also {
+                data.forEachIndexed { index, player ->
+                    it.append("**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n")
+                }
+            }.toString()
             color = getRandomColor()
             footer = EmbedFooter(footerText)
         }
