@@ -29,12 +29,32 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.1.4")
 
     /*   Network API Requests   */
+    //TODO Change to Ktor Client
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 }
 
+val createBuildClassFile = task("createBuildClassFile") {
+    doFirst {
+        val packagePath = "dev${File.separator}fstudio${File.separator}mc_discord_bot"
+        val path =
+            "src${File.separator}" +
+                    "main${File.separator}" +
+                    "kotlin${File.separator}" +
+                    "$packagePath${File.separator}"
+
+        File(path, "Build.kt").writeText(
+            "package dev.fstudio.mc_discord_bot\n\n" +
+                    "object Build {\n" +
+                    "   const val VERSION = $version\n" +
+                    "}"
+        )
+    }
+}
+
 tasks.withType<KotlinCompile> {
+    dependsOn(createBuildClassFile)
     kotlinOptions.jvmTarget = "11"
 }
 

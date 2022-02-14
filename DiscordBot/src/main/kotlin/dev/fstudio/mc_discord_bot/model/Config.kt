@@ -5,12 +5,13 @@ import net.peanuuutz.tomlkt.Comment
 
 @Serializable
 data class Config(
+    val version: Double = 0.0,
     @Comment("URL to webAPI module")
     val webAPI: String = "http://localhost:8080/",
     @Comment("Minecraft server connection data")
-    val connection: Connection,
+    val connection: Connection = Connection(),
     @Comment("Discord bot setup data")
-    val discord: Discord
+    val discord: Discord = Discord()
 )
 
 @Serializable
@@ -26,6 +27,8 @@ data class Discord(
     val botLocale: String = "en",
     val commandPrefix: String = "!",
     val channelId: String = "",
+    @Comment("Show online count in bot status")
     val discordStatus: Boolean = false,
+    @Comment("Server status update time in seconds")
     val statusUpdateTime: Int = 30
 )

@@ -3,7 +3,7 @@ package dev.fstudio.mc_discord_bot.di
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dev.fstudio.mc_discord_bot.api.mcapi.MCApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
-import dev.fstudio.mc_discord_bot.utils.MicsUtil.getConfiguration
+import dev.fstudio.mc_discord_bot.utils.ConfigManager.readConfig
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -32,7 +32,7 @@ private fun provideOkHttp(): OkHttpClient {
 private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .client(okHttpClient)
-        .baseUrl(getConfiguration().webAPI)
+        .baseUrl(readConfig().webAPI)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 }
