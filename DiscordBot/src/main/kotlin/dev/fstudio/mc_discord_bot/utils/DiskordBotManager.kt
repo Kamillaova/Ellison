@@ -4,16 +4,17 @@ import com.jessecorbett.diskord.bot.bot
 import com.jessecorbett.diskord.bot.classicCommands
 import com.jessecorbett.diskord.bot.events
 import dev.fstudio.mc_discord_bot.model.Config
+import mu.KLogger
 
 object DiskordBotManager {
 
     lateinit var discordBotCommands: DiscordBotCommands
+    lateinit var LOGGER: KLogger
 
     suspend fun setupBot(config: Config) {
         bot(config.discord.botToken) {
 
             discordBotCommands = DiscordBotCommands(
-                logger,
                 config.discord.channelId,
                 config.connection.serverIp,
                 config.connection.serverPort,
@@ -23,6 +24,7 @@ object DiskordBotManager {
 
             events {
                 onReady(discordBotCommands.requestStatus(this@bot))
+                LOGGER = logger
             }
 
             classicCommands(config.discord.commandPrefix) {

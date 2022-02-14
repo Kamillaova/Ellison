@@ -7,16 +7,15 @@ import com.jessecorbett.diskord.bot.BotContext
 import com.jessecorbett.diskord.util.words
 import dev.fstudio.mc_discord_bot.api.mcapi.MCApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
+import dev.fstudio.mc_discord_bot.utils.DiskordBotManager.LOGGER
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mu.KLogger
 import org.koin.java.KoinJavaComponent.inject
 
 
 class DiscordBotCommands(
-    private val logger: KLogger,
     private val channelId: String,
     private val serverIp: String,
     private val serverPort: String,
@@ -39,10 +38,10 @@ class DiscordBotCommands(
                         client.setStatus("${data.players.online} / ${data.players.max}")
 
                         data.players.sample?.forEach {
-                            logger.info("Online status: Player: ${it.name}")
+                            LOGGER.info("Online status: Player: ${it.name}")
                         }
                     }.onFailure { error ->
-                        logger.error("Online status: ${error.stackTraceToString()}")
+                        LOGGER.error("Online status: ${error.stackTraceToString()}")
                     }
                     delay(statusUpdateTime.toLong() * 1000)
                 }
@@ -56,10 +55,10 @@ class DiscordBotCommands(
                 kotlin.runCatching {
                     mcApi.getServerPing("$pingUrl/server/ping/${serverIp}:${serverPort}")
                 }.onSuccess { data ->
-                    it.respond(block = MessageTemplate.onlinePlayers(data, mcStats, logger))
+                    it.respond(block = MessageTemplate.onlinePlayers(data, mcStats))
                 }.onFailure { error ->
                     it.respond(onlineRequestError)
-                    logger.error("Online request: ${error.stackTraceToString()}")
+                    LOGGER.error("Online request: ${error.stackTraceToString()}")
                 }
             }
         }
@@ -76,7 +75,7 @@ class DiscordBotCommands(
                         it.respond(block = MessageTemplate.playerStats(username, data))
                     }.onFailure { error ->
                         it.respond(onlineRequestError)
-                        logger.error("Stats request: ${error.stackTraceToString()}")
+                        LOGGER.error("Stats request: ${error.stackTraceToString()}")
                     }
                 } else it.respond(statsRequestError)
             }
@@ -92,7 +91,7 @@ class DiscordBotCommands(
                     it.respond(block = MessageTemplate.allPlayers(data))
                 }.onFailure { error ->
                     it.respond(onlineRequestError)
-                    logger.error("Online status: ${error.stackTraceToString()}")
+                    LOGGER.error("Online status: ${error.stackTraceToString()}")
                 }
             }
         }
@@ -107,7 +106,7 @@ class DiscordBotCommands(
                     it.respond(block = MessageTemplate.topPlayers(data))
                 }.onFailure { error ->
                     it.respond(onlineRequestError)
-                    logger.error("Online status: ${error.stackTraceToString()}")
+                    LOGGER.error("Online status: ${error.stackTraceToString()}")
                 }
             }
         }

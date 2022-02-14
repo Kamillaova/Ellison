@@ -8,6 +8,7 @@ import dev.fstudio.mc_discord_bot.api.mcapi.ping.ServerPing
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Player
 import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.utils.DiskordBotManager.LOGGER
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.convertToDead
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.fixUnderline
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getAllBlocks
@@ -16,11 +17,10 @@ import dev.fstudio.mc_discord_bot.utils.MicsUtil.getRandomColor
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.getSwamDistance
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.tickToTime
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.withSuffix
-import mu.KLogger
 
 object MessageTemplate {
 
-    suspend fun onlinePlayers(data: ServerPing, mcStats: MCWorldApi, logger: KLogger): Embed.() -> Unit {
+    suspend fun onlinePlayers(data: ServerPing, mcStats: MCWorldApi): Embed.() -> Unit {
 
         val playersList = mutableListOf<EmbedField>()
 
@@ -36,7 +36,7 @@ object MessageTemplate {
                     )
                 )
             }.onFailure {
-                logger.error(it.stackTraceToString())
+                LOGGER.error(it.stackTraceToString())
             }
         }
 
@@ -51,18 +51,15 @@ object MessageTemplate {
         }
     }
 
-    fun allPlayers(data: List<Player>): Embed.() -> Unit {
-
-        return {
-            title = allPlayersTitle
-            description =  StringBuilder().apply {
-                data.forEachIndexed { index, player ->
-                    append("**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n")
-                }
-            }.toString()
-            color = getRandomColor()
-            footer = EmbedFooter(footerText)
-        }
+    fun allPlayers(data: List<Player>): Embed.() -> Unit = {
+        title = allPlayersTitle
+        description =  StringBuilder().apply {
+            data.forEachIndexed { index, player ->
+                append("**${index + 1}. **${player.name.fixUnderline().convertToDead(player.abandoned)}\n")
+            }
+        }.toString()
+        color = getRandomColor()
+        footer = EmbedFooter(footerText)
     }
 
     fun topPlayers(data: List<Player>): Embed.() -> Unit {
@@ -87,26 +84,22 @@ object MessageTemplate {
         }
     }
 
-    fun playerStats(username: String, data: Stats): Embed.() -> Unit {
-        return {
-            title = "$playerStatsTitle - $username"
-            description = statsDescription(data)
-            color = getRandomColor()
-            footer = EmbedFooter(footerText)
-        }
+    fun playerStats(username: String, data: Stats): Embed.() -> Unit = {
+        title = "$playerStatsTitle - $username"
+        description = statsDescription(data)
+        color = getRandomColor()
+        footer = EmbedFooter(footerText)
     }
 
-    private fun statsDescription(data: Stats): String {
-        return "**$numberOfActions**\n\n" +
-                "**$realDaysInDay **${data.minecraftPlayOneMinute.tickToTime()}\n" +
-                "**$killsAndDeath **${data.minecraftPlayerKills.withSuffix()} / ${data.minecraftDeaths.withSuffix()}\n" +
-                "**$enchantedItems **${data.minecraftEnchantItem.withSuffix()}\n" +
-                "**$droppedItems **${data.minecraftDrop.withSuffix()}\n" +
-                "**$killedMobs **${data.minecraftMobKills.withSuffix()}\n" +
-                "**$jumpCount **${data.minecraftJump.withSuffix()}\n\n" +
-                "**$walkedDistance **${getGroundWalkedDistance(data).withSuffix()}\n" +
-                "**$swamDistance **${getSwamDistance(data).withSuffix()}\n" +
-                "**$flownDistance **${data.minecraftFlyOneCm.withSuffix()}\n\n" +
-                "**$totalDistance **${getAllBlocks(data).withSuffix()}"
-    }
+    private fun statsDescription(data: Stats): String = "**$numberOfActions**\n\n" +
+            "**$realDaysInDay **${data.minecraftPlayOneMinute.tickToTime()}\n" +
+            "**$killsAndDeath **${data.minecraftPlayerKills.withSuffix()} / ${data.minecraftDeaths.withSuffix()}\n" +
+            "**$enchantedItems **${data.minecraftEnchantItem.withSuffix()}\n" +
+            "**$droppedItems **${data.minecraftDrop.withSuffix()}\n" +
+            "**$killedMobs **${data.minecraftMobKills.withSuffix()}\n" +
+            "**$jumpCount **${data.minecraftJump.withSuffix()}\n\n" +
+            "**$walkedDistance **${getGroundWalkedDistance(data).withSuffix()}\n" +
+            "**$swamDistance **${getSwamDistance(data).withSuffix()}\n" +
+            "**$flownDistance **${data.minecraftFlyOneCm.withSuffix()}\n\n" +
+            "**$totalDistance **${getAllBlocks(data).withSuffix()}"
 }
