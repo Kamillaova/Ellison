@@ -45,6 +45,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.37.3")
     implementation("org.jetbrains.exposed:exposed-dao:0.37.3")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.37.3")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.37.3")
 
     /*   MySQL Connector   */
     implementation("mysql:mysql-connector-java:8.0.25")

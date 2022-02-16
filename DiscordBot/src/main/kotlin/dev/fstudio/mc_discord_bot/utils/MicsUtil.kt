@@ -58,4 +58,10 @@ object MicsUtil {
     fun String.fixUnderline(): String = this.replace("_", "\\_")
 
     fun String.convertToDead(isDead: Boolean?): String = if (isDead == true) "~~$this~~" else this
+
+    fun Long.toRoleMention(): String {
+        return String.format("<@&%d>", this)
+    }
+
+
 }

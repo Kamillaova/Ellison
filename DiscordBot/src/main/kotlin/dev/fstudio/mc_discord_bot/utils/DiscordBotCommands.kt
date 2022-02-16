@@ -23,25 +23,32 @@ class DiscordBotCommands(
     private val statusUpdateTime: Int
 ) {
 
-    val pingUrl = "https://eu.mc-api.net/v3"
-
+    private val pingUrl = "https://eu.mc-api.net/v3"
     private val mcApi by inject<MCApi>(MCApi::class.java)
     private val mcStats by inject<MCWorldApi>(MCWorldApi::class.java)
 
     fun requestStatus(client: BotBase): suspend (Ready) -> Unit {
+        LOGGER.info("REQUEST_READY: $status")
         return {
+            LOGGER.info("STATUS: $status")
             CoroutineScope(Dispatchers.IO).launch {
+
+                LOGGER.info("Coroutine")
                 while (status) {
                     kotlin.runCatching {
                         mcApi.getServerPing("$pingUrl/server/ping/${serverIp}:${serverPort}")
                     }.onSuccess { data ->
+                        LOGGER.info("SUCCESS")
                         client.setStatus("${data.players.online} / ${data.players.max}")
 
                         data.players.sample?.forEach {
                             LOGGER.info("Online status: Player: ${it.name}")
                         }
                     }.onFailure { error ->
+                        LOGGER.error("IP -> $serverIp")
+                        LOGGER.error("Port -> $serverPort")
                         LOGGER.error("Online status: ${error.stackTraceToString()}")
+                        LOGGER.info("FAILURE")
                     }
                     delay(statusUpdateTime.toLong() * 1000)
                 }
@@ -108,6 +115,43 @@ class DiscordBotCommands(
                     it.respond(onlineRequestError)
                     LOGGER.error("Online status: ${error.stackTraceToString()}")
                 }
+            }
+        }
+    }
+
+    fun requestRoles(): suspend BotContext.(Message) -> Unit {
+        return {
+            listOf(
+                "832663275065573386",
+                "927604889360687204",
+                "923947788826468413",
+                "825062492630941718"
+            ).forEach { channelsIds ->
+                if (it.channelId == channelsIds) {
+                    it.respond(block = MessageTemplate.roles())
+                }
+            }
+        }
+    }
+
+    fun requestRules(): suspend BotContext.(Message) -> Unit {
+        return {
+            listOf(
+                "814354006977282069",
+                "923947788826468413",
+                "825062492630941718"
+            ).forEach { channelsIds ->
+                if (it.channelId == channelsIds) {
+                    it.respond(block = MessageTemplate.rules())
+                }
+            }
+        }
+    }
+
+    fun requestExceptionMessage(): suspend BotContext.(Message) -> Unit {
+        return {
+            if (it.channelId == channelId) {
+                it.respond(block = MessageTemplate.exception())
             }
         }
     }

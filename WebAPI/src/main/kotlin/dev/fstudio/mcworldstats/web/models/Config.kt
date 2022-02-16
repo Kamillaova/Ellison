@@ -6,7 +6,7 @@ import net.peanuuutz.tomlkt.Comment
 @Serializable
 data class Config(
     @Comment("Path to minecraft world")
-    val worldPath: String = "/home/minecraft/world",
+    val worldPath: String = "\$PATH_TO_SERVER_FOLDER/world",
     @Comment("WebAPI server settings")
     val server: Server,
     @Comment("Database auth data")

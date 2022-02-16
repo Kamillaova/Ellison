@@ -23,25 +23,41 @@ object DiskordBotManager {
             )
 
             events {
-                onReady(discordBotCommands.requestStatus(this@bot))
                 LOGGER = logger
+                LOGGER.info("EVENTS")
+                onReady {
+                    LOGGER.info("ON_READY")
+                    discordBotCommands.requestStatus(this@bot)
+                }
             }
 
             classicCommands(config.discord.commandPrefix) {
                 listOf("online", "онлайн", "o", "о").forEach { alias ->
-                    command(alias, block = discordBotCommands.requestOnline())
+//                    command(alias, block = discordBotCommands.requestOnline())
+                    command(alias, block = discordBotCommands.requestExceptionMessage())
                 }
 
                 listOf("top", "топ", "t", "т").forEach { alias ->
-                    command(alias, block = discordBotCommands.requestTop())
+//                    command(alias, block = discordBotCommands.requestTop())
+                    command(alias, block = discordBotCommands.requestExceptionMessage())
                 }
 
                 listOf("stats", "стата", "s", "с").forEach { alias ->
-                    command(alias, block = discordBotCommands.requestStats())
+//                    command(alias, block = discordBotCommands.requestStats())
+                    command(alias, block = discordBotCommands.requestExceptionMessage())
                 }
 
                 listOf("list", "лист", "l", "л").forEach { alias ->
-                    command(alias, block = discordBotCommands.requestPlayerList())
+//                    command(alias, block = discordBotCommands.requestPlayerList())
+                    command(alias, block = discordBotCommands.requestExceptionMessage())
+                }
+
+                listOf("roles", "роли", "r", "p").forEach { alias ->
+                    command(alias, block = discordBotCommands.requestRoles())
+                }
+
+                listOf("rules", "правила", "r", "п").forEach { alias ->
+                    command(alias, block = discordBotCommands.requestRules())
                 }
             }
         }

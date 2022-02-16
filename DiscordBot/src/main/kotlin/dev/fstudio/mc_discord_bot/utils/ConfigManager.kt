@@ -6,33 +6,32 @@ import net.peanuuutz.tomlkt.Toml
 import java.io.File
 
 object ConfigManager {
-    private var file = File(
+
+    private val toml = Toml { ignoreUnknownKeys = true }
+
+    var config: Config
+        private set
+
+    var file = File(
         "config${File.separator}",
         "discord-bot.toml"
     )
 
     init {
-        Toml { ignoreUnknownKeys = true }
-
-        val config = readConfig()
-        if (config.version != Build.VERSION) {
-            writeConfig(config)
-        }
+        config = readConfig()
+        if (config.version != Build.VERSION)
+            config = writeConfig(config)
     }
 
-    private fun writeConfig(oldConfig: Config) {
-        file.also {
-            val newConfig = Toml.encodeToString(
-                Config.serializer(),
-                oldConfig.copy(version = Build.VERSION)
-            )
-            it.writeText(newConfig)
-        }
+    private fun writeConfig(old: Config): Config {
+        val new = old.copy(version = Build.VERSION)
+        file.writeText(toml.encodeToString(Config.serializer(), new))
+        return new
     }
 
-    fun readConfig(): Config {
-        if (!file.exists())
-            writeConfig(Config())
-        return Toml.decodeFromString(Config.serializer(), file.readText())
+    fun readConfig(): Config = if (!file.exists()) {
+        writeConfig(Config())
+    } else {
+        toml.decodeFromString(Config.serializer(), file.readText())
     }
 }

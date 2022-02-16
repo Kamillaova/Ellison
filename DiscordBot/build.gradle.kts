@@ -33,6 +33,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+
+    implementation("io.ktor:ktor-client-core:1.6.7")
+    implementation("io.ktor:ktor-client-java:1.6.7")
+    implementation("io.ktor:ktor-client-serialization:1.6.7")
+
 }
 
 val createBuildClassFile = task("createBuildClassFile") {
@@ -47,7 +52,7 @@ val createBuildClassFile = task("createBuildClassFile") {
         File(path, "Build.kt").writeText(
             "package dev.fstudio.mc_discord_bot\n\n" +
                     "object Build {\n" +
-                    "   const val VERSION = $version\n" +
+                    "    const val VERSION = $version\n" +
                     "}"
         )
     }

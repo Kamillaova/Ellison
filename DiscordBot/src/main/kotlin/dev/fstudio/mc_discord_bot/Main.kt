@@ -8,8 +8,6 @@ import org.koin.core.context.startKoin
 
 @DelicateCoroutinesApi
 suspend fun main() {
-
     startKoin { modules(networkModule) }
-
     DiskordBotManager.setupBot(readConfig())
 }
