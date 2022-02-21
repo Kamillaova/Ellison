@@ -1,7 +1,7 @@
-package dev.fstudio.mc_discord_bot.utils
+package dev.fstudio.mcworldstats.util
 
-import dev.fstudio.mc_discord_bot.Build
-import dev.fstudio.mc_discord_bot.model.Config
+import dev.fstudio.mcworldstats.Build
+import dev.fstudio.mcworldstats.web.models.Config
 import net.peanuuutz.tomlkt.Toml
 import java.io.File
 
@@ -14,7 +14,7 @@ object ConfigManager {
 
     private var file = File(
         "config${File.separator}",
-        "discord-bot.toml"
+        "web-api.toml"
     )
 
     init {

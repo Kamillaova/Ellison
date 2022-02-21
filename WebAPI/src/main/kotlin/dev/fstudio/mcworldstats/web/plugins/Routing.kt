@@ -1,8 +1,8 @@
 package dev.fstudio.mcworldstats.web.plugins
 
-import dev.fstudio.mcworldstats.config
+import dev.fstudio.mcworldstats.util.ConfigManager.config
 import dev.fstudio.mcworldstats.web.routers.routeAllPlayers
-import dev.fstudio.mcworldstats.web.routers.routeOnlineStats
+import dev.fstudio.mcworldstats.web.routers.routeDeathCounter
 import dev.fstudio.mcworldstats.web.routers.routeStat
 import dev.fstudio.mcworldstats.web.routers.routeTop
 import io.ktor.application.*
@@ -15,10 +15,14 @@ fun Application.configureRouting() {
         routeStat()
         routeAllPlayers()
         routeTop()
-        routeOnlineStats()
         static("stats") {
-            staticRootFolder = File(config.worldPath)
+            staticRootFolder = File(config.minecraftWorlds.playerStatsWorld)
             files("stats")
         }
+        static("deaths") {
+            staticRootFolder = File(config.minecraftWorlds.deathCounterWorld)
+            files("deaths")
+        }
+        routeDeathCounter()
     }
 }

@@ -15,29 +15,8 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    /*   TOML Configuration file   */
-    implementation("net.peanuuutz:tomlkt:0.1.0")
-
-    /*   Discord Bot API Library   */
-    implementation("com.jessecorbett:diskord-bot:2.1.1")
-
-    /*   Coroutines   */
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-
-    /*   Dependency Injection   */
-    implementation("io.insert-koin:koin-core:3.1.4")
-
-    /*   Network API Requests   */
-    //TODO Change to Ktor Client
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
-    implementation("io.ktor:ktor-client-core:1.6.7")
-    implementation("io.ktor:ktor-client-java:1.6.7")
-    implementation("io.ktor:ktor-client-serialization:1.6.7")
-
+application {
+    mainClass.set("dev.fstudio.mc_discord_bot.MainKt")
 }
 
 val createBuildClassFile = task("createBuildClassFile") {
@@ -69,6 +48,27 @@ tasks.withType<ShadowJar> {
     }
 }
 
-application {
-    mainClass.set("dev.fstudio.mc_discord_bot.MainKt")
+dependencies {
+    /*   TOML Configuration file   */
+    implementation("net.peanuuutz:tomlkt:0.1.0")
+
+    /*   Discord Bot API Library   */
+    implementation("com.jessecorbett:diskord-bot:2.1.1")
+
+    /*   Coroutines   */
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+
+    /*   Dependency Injection   */
+    implementation("io.insert-koin:koin-core:3.1.4")
+
+    /*   Network API Requests   */
+    //TODO Change to Ktor Client
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+
+    implementation("io.ktor:ktor-client-core:1.6.7")
+    implementation("io.ktor:ktor-client-java:1.6.7")
+    implementation("io.ktor:ktor-client-serialization:1.6.7")
+
 }

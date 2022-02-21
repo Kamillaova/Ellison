@@ -1,6 +1,6 @@
 package dev.fstudio.mcworldstats.web.plugins
 
-import dev.fstudio.mcworldstats.config
+import dev.fstudio.mcworldstats.util.ConfigManager.config
 import io.ktor.application.*
 import org.jetbrains.exposed.sql.Database
 

@@ -19,11 +19,30 @@ application {
     mainClass.set("dev.fstudio.mcworldstats.MainKt")
 }
 
+val createBuildClassFile = task("createBuildClassFile") {
+    doFirst {
+        val packagePath = "dev${File.separator}fstudio${File.separator}mcworldstats"
+        val path =
+            "src${File.separator}" +
+                    "main${File.separator}" +
+                    "kotlin${File.separator}" +
+                    "$packagePath${File.separator}"
+
+        File(path, "Build.kt").writeText(
+            "package dev.fstudio.mcworldstats\n\n" +
+                    "object Build {\n" +
+                    "    const val VERSION = $version\n" +
+                    "}"
+        )
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
 
 tasks.withType<ShadowJar> {
+    dependsOn(createBuildClassFile)
     manifest {
         attributes["Main-Class"] = "dev.fstudio.mcworldstats.MainKt"
     }
@@ -37,6 +56,9 @@ dependencies {
     implementation("io.ktor:ktor-server-core:1.6.7")
     implementation("io.ktor:ktor-server-netty:1.6.7")
     implementation("io.ktor:ktor-serialization:1.6.7")
+    implementation("io.ktor:ktor-html-builder:1.6.7")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-css:+")
+
 
     /*   Logger   */
     implementation("ch.qos.logback:logback-classic:1.2.10")

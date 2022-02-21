@@ -1,9 +1,9 @@
 package dev.fstudio.mcworldstats.web.routers
 
-import dev.fstudio.mcworldstats.config
-import dev.fstudio.mcworldstats.json
+import dev.fstudio.mcworldstats.util.ConfigManager.config
 import dev.fstudio.mcworldstats.web.api.model.SimplifyStats
 import dev.fstudio.mcworldstats.web.dao.UserTable
+import dev.fstudio.mcworldstats.web.plugins.json
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
@@ -32,7 +32,7 @@ fun Route.routeStat() {
             }
         }
 
-        val v = File("${config.worldPath}/stats/${uuid[0]}.json")
+        val v = File("${config.minecraftWorlds.playerStatsWorld}/stats/${uuid[0]}.json")
         if (v.exists()) {
             val input = json.decodeFromStream(SimplifyStats.serializer(), v.inputStream())
             call.respond(HttpStatusCode.OK, input.stats.minecraftCustom)
