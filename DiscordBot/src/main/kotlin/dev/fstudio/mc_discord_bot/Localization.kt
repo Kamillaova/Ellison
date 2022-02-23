@@ -1,8 +1,9 @@
-package dev.fstudio.mc_discord_bot.utils
+package dev.fstudio.mc_discord_bot
 
+import dev.fstudio.mc_discord_bot.utils.ConfigManager.config
 import java.util.*
 
-var bundle: ResourceBundle = ResourceBundle.getBundle("lang", Locale(ConfigManager.readConfig().discord.botLocale))
+var bundle: ResourceBundle = ResourceBundle.getBundle("lang", Locale(config.discord.botLocale))
 
 /*   Messages   */
 val footerText: String = bundle.getString("embedFooterText")

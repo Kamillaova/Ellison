@@ -29,9 +29,9 @@ object ConfigManager {
         return new
     }
 
-    fun readConfig(): Config = if (!file.exists()) {
-        writeConfig(Config())
-    } else {
-        toml.decodeFromString(Config.serializer(), file.readText())
-    }
+    private fun readConfig(): Config = if (!file.exists()) {
+            writeConfig(Config())
+        } else {
+            toml.decodeFromString(Config.serializer(), file.readText())
+        }
 }

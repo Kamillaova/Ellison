@@ -2,7 +2,7 @@ package dev.fstudio.mc_discord_bot.utils
 
 import com.jessecorbett.diskord.api.common.Color
 import com.jessecorbett.diskord.util.Colors
-import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.api.mcworldstats.stats.response.Stats
 import dev.fstudio.mc_discord_bot.model.Time
 import kotlin.math.ln
 import kotlin.math.pow

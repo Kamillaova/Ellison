@@ -1,4 +1,4 @@
-package dev.fstudio.mc_discord_bot.api.mcworldstats
+package dev.fstudio.mc_discord_bot.api.mcworldstats.stats.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

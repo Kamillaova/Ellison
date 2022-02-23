@@ -1,4 +1,4 @@
-package dev.fstudio.mc_discord_bot.api.mcworldstats
+package dev.fstudio.mc_discord_bot.api.mcworldstats.common.response
 
 
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.fixUnderline

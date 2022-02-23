@@ -1,46 +1,44 @@
 package dev.fstudio.mc_discord_bot.di
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dev.fstudio.mc_discord_bot.api.mcapi.MCApi
+import dev.fstudio.mc_discord_bot.api.mcapi.MCApiImpl
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
-import dev.fstudio.mc_discord_bot.utils.ConfigManager.readConfig
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
+import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApiImpl
+import dev.fstudio.mc_discord_bot.utils.ConfigManager.config
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
-
-val json = Json { ignoreUnknownKeys = true }
 
 val networkModule = module {
-    single { provideOkHttp() }
-    single { provideRetrofit(get()) }
+    single { provideKtorClient() }
     single { provideMCApiService(get()) }
     single { provideMCStatsApiService(get()) }
 }
 
-private fun provideOkHttp(): OkHttpClient {
-    return OkHttpClient.Builder()
-        .writeTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(5, TimeUnit.SECONDS)
-        .followRedirects(true)
-        .followSslRedirects(true)
-        .build()
+private fun provideKtorClient(): HttpClient {
+    return HttpClient(CIO) {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+                ignoreUnknownKeys = true
+            })
+        }
+        defaultRequest {
+            if(url.host == "localhost") {
+                url.host = config.webHost
+                url.port = config.webPort
+            }
+            followRedirects = true
+        }
+    }
 }
 
-private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl(readConfig().webAPI)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .build()
+private fun provideMCApiService(ktorClient: HttpClient): MCApi {
+    return MCApiImpl(ktorClient)
 }
 
-private fun provideMCApiService(retrofit: Retrofit): MCApi {
-    return retrofit.create(MCApi::class.java)
-}
-
-private fun provideMCStatsApiService(retrofit: Retrofit): MCWorldApi {
-    return retrofit.create(MCWorldApi::class.java)
+private fun provideMCStatsApiService(ktorClient: HttpClient): MCWorldApi {
+    return MCWorldApiImpl(ktorClient)
 }

@@ -6,10 +6,11 @@ import com.jessecorbett.diskord.api.channel.EmbedFooter
 import com.jessecorbett.diskord.api.channel.EmbedImage
 import com.jessecorbett.diskord.api.common.Emoji
 import com.jessecorbett.diskord.api.common.formatted
-import dev.fstudio.mc_discord_bot.api.mcapi.ping.ServerPing
+import dev.fstudio.mc_discord_bot.*
+import dev.fstudio.mc_discord_bot.api.mcapi.ping.response.ServerPing
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
-import dev.fstudio.mc_discord_bot.api.mcworldstats.Player
-import dev.fstudio.mc_discord_bot.api.mcworldstats.Stats
+import dev.fstudio.mc_discord_bot.api.mcworldstats.common.response.Player
+import dev.fstudio.mc_discord_bot.api.mcworldstats.stats.response.Stats
 import dev.fstudio.mc_discord_bot.utils.DiskordBotManager.LOGGER
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.convertToDead
 import dev.fstudio.mc_discord_bot.utils.MicsUtil.fixUnderline
@@ -46,10 +47,10 @@ object MessageTemplate {
         return {
             title = onlinePlayersTitle
             description = "$modsCountOnServer ${data.forgeData?.mods?.size}\n" +
-                    "$serverVersion ${data.version?.name}\n\n"
+                    "$serverVersion ${data.version.name}\n\n"
             fields = playersList
             color = getRandomColor()
-            footer = EmbedFooter("$playersCount ${data.players?.online} / ${data.players?.max}\n" + footerText)
+            footer = EmbedFooter("$playersCount ${data.players.online} / ${data.players.max}\n" + footerText)
             thumbnail = EmbedImage(data.favicon)
         }
     }
