@@ -4,6 +4,7 @@ import dev.fstudio.mc_discord_bot.api.mcapi.MCApi
 import dev.fstudio.mc_discord_bot.api.mcapi.MCApiImpl
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApi
 import dev.fstudio.mc_discord_bot.api.mcworldstats.MCWorldApiImpl
+import dev.fstudio.mc_discord_bot.inject
 import dev.fstudio.mc_discord_bot.utils.config.ConfigManager.config
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -12,10 +13,9 @@ import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent.inject
 
-val mcApi by inject<MCApi>(MCApi::class.java)
-val mcStats by inject<MCWorldApi>(MCWorldApi::class.java)
+val mcApi by inject<MCApi>()
+val mcStats by inject<MCWorldApi>()
 
 val networkModule = module {
     single { provideKtorClient() }
