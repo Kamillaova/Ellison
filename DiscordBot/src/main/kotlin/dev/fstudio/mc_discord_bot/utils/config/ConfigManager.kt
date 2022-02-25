@@ -1,7 +1,6 @@
-package dev.fstudio.mc_discord_bot.utils
+package dev.fstudio.mc_discord_bot.utils.config
 
 import dev.fstudio.mc_discord_bot.Build
-import dev.fstudio.mc_discord_bot.model.Config
 import net.peanuuutz.tomlkt.Toml
 import java.io.File
 
@@ -30,8 +29,8 @@ object ConfigManager {
     }
 
     private fun readConfig(): Config = if (!file.exists()) {
-            writeConfig(Config())
-        } else {
-            toml.decodeFromString(Config.serializer(), file.readText())
-        }
+        writeConfig(Config())
+    } else {
+        toml.decodeFromString(Config.serializer(), file.readText())
+    }
 }

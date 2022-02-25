@@ -4,6 +4,6 @@ import dev.fstudio.mc_discord_bot.api.mcapi.ping.response.ServerPing
 
 interface MCApi {
     suspend fun getServerPing(
-        url: String
+        serverIp: String, serverPort: String
     ): ServerPing
 }

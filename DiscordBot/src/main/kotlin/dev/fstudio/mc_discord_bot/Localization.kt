@@ -1,6 +1,6 @@
 package dev.fstudio.mc_discord_bot
 
-import dev.fstudio.mc_discord_bot.utils.ConfigManager.config
+import dev.fstudio.mc_discord_bot.utils.config.ConfigManager.config
 import java.util.*
 
 var bundle: ResourceBundle = ResourceBundle.getBundle("lang", Locale(config.discord.botLocale))
