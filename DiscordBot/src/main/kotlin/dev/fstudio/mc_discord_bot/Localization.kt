@@ -6,8 +6,8 @@ import kotlin.reflect.KProperty
 
 var bundle: ResourceBundle = ResourceBundle.getBundle("lang", Locale(config.discord.botLocale))
 
-class LocaleMessage {
-    var value: String? = null
+private class LocaleMessage {
+    private var value: String? = null
 
     operator fun getValue(th: Any?, prop: KProperty<*>): String {
         return value ?: bundle.getString(prop.name).apply { value = this }
